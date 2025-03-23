@@ -158,7 +158,7 @@ def make_change(n,list_coins):
     memo = [[-1 for _ in range(len(list_coins))] for _ in range(n+1)]
     return count_ways(n,list_coins,0,memo)
 
-GRID_SIZE = 4
+GRID_SIZE = 8
 
 def place_queen(row,columns,result):
     if row == GRID_SIZE:
