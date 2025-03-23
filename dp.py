@@ -157,6 +157,33 @@ def make_change(n,list_coins):
         return ways
     memo = [[-1 for _ in range(len(list_coins))] for _ in range(n+1)]
     return count_ways(n,list_coins,0,memo)
+
+GRID_SIZE = 4
+
+def place_queen(row,columns,result):
+    if row == GRID_SIZE:
+        result.append(columns.copy())
+    else:
+        for col in range(GRID_SIZE):
+            if check_valid(columns,row,col):
+                columns[row] = col
+                place_queen(row+1,columns,result)
+                
+def check_valid(columns,row1,col1):
+    for row2 in range(row1):
+        col2 = columns[row2]
+        
+        if col1==col2:
+            return False
+        
+        col_diff = abs(col2-col1)
+        
+        row_diff = row1-row2
+        
+        if col_diff == row_diff:
+            return False
+    
+    return True
     
 print("Tower of Hanoi :")
 tower_of_hanoi(3, "A", "C", "B")
@@ -190,3 +217,8 @@ print(screen)
 print("--------------------------------")
 print("Make Change :")
 print(make_change(100,[1,5,10,25]))
+print("--------------------------------")
+print("Place Queen :")
+result = []
+place_queen(0,[0]*GRID_SIZE,result)
+print(result)
