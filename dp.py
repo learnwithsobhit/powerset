@@ -184,6 +184,38 @@ def check_valid(columns,row1,col1):
             return False
     
     return True
+
+class Box:
+    def __init__(self,w,h,d):
+        self.w = w
+        self.h = h
+        self.d = d
+    
+    def can_be_above(self,box):
+        return self.w < box.w and self.h < box.h and self.d < box.d
+        
+        
+
+def create_stack(boxes):
+    boxes.sort(key=lambda x: x.h, reverse=True)
+    
+    stack_map = {i: 0 for i in range(len(boxes))}
+    return create_stack_helper(boxes,None,0,stack_map)
+    
+
+def create_stack_helper(boxes,bottom,offset,stack_map):
+    if offset >=len(boxes):
+        return 0
+    new_bottom = boxes[offset]
+    height_with_bottom = 0
+    if bottom == None or new_bottom.can_be_above(bottom):
+        if stack_map[offset] == 0:
+            stack_map[offset] = create_stack_helper(boxes,new_bottom,offset+1,stack_map)
+            stack_map[offset] += new_bottom.h
+        height_with_bottom = stack_map[offset]
+    height_without_bottom = create_stack_helper(boxes,bottom,offset+1,stack_map)
+    max_height = max(height_with_bottom,height_without_bottom)
+    return max_height
     
 print("Tower of Hanoi :")
 tower_of_hanoi(3, "A", "C", "B")
@@ -222,3 +254,7 @@ print("Place Queen :")
 result = []
 place_queen(0,[0]*GRID_SIZE,result)
 print(result)
+print("--------------------------------")
+print("Create Stack :")
+boxes = [Box(1,1,1),Box(2,2,2),Box(3,3,3)]
+print(create_stack(boxes))
