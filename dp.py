@@ -216,6 +216,68 @@ def create_stack_helper(boxes,bottom,offset,stack_map):
     height_without_bottom = create_stack_helper(boxes,bottom,offset+1,stack_map)
     max_height = max(height_with_bottom,height_without_bottom)
     return max_height
+
+def knapsack(capacity,weights,profits):
+    n = len(weights)
+    memo = [[-1 for _ in range(capacity+1)] for _ in range(n+1)]
+    return knapsack_helper(capacity,weights,profits,n,memo)
+    
+def knapsack_helper(capacity,weights,profits,i,memo):
+    if i == 0:
+        return 0
+    if memo[i][capacity] != -1:
+        return memo[i][capacity]
+    pick = 0
+    if weights[i-1] <= capacity:
+        pick = profits[i-1] + knapsack_helper(capacity-weights[i-1],weights,profits,i-1,memo)
+    dont_pick = knapsack_helper(capacity,weights,profits,i-1,memo)
+    memo[i][capacity] = max(pick,dont_pick)
+    return memo[i][capacity]
+
+def longest_common_substring(str1,str2):
+    m = len(str1)
+    n = len(str2)
+    prev = [0]*(n+1)
+    result = 0
+    for i in range(1,m+1):
+        curr = [0]*(n+1)
+        for j in range(1,n+1):
+            if str1[i-1] == str2[j-1]:
+                curr[j] = prev[j-1]+1
+                result = max(result,curr[j])
+            else:
+                curr[j] = 0
+        prev = curr
+    return result
+
+def longest_common_subsequence(str1,str2):
+    m = len(str1)
+    n = len(str2)
+    dp = [[0]*(n+1) for _ in range(m+1)]
+    for i in range(1,m+1):
+        for j in range(1,n+1):
+            if str1[i-1] == str2[j-1]:
+                dp[i][j] = dp[i-1][j-1]+1
+            else:
+                dp[i][j] = max(dp[i-1][j],dp[i][j-1])
+    return dp[m][n]
+
+def lcs_memo(str1,str2):
+    m = len(str1)
+    n = len(str2)
+    memo = [[-1 for _ in range(n+1)] for _ in range(m+1)]
+    return lcs_memo_helper(str1,str2,m,n,memo)
+
+def lcs_memo_helper(str1,str2,i,j,memo):
+    if i == 0 or j == 0:
+        return 0
+    if memo[i][j] != -1:
+        return memo[i][j]
+    if str1[i-1] == str2[j-1]:
+        memo[i][j] = 1+ lcs_memo_helper(str1,str2,i-1,j-1,memo)
+    else:
+        memo[i][j] = max(lcs_memo_helper(str1,str2,i-1,j,memo),lcs_memo_helper(str1,str2,i,j-1,memo))
+    return memo[i][j]
     
 print("Tower of Hanoi :")
 tower_of_hanoi(3, "A", "C", "B")
@@ -258,3 +320,17 @@ print("--------------------------------")
 print("Create Stack :")
 boxes = [Box(1,1,1),Box(2,2,2),Box(3,3,3)]
 print(create_stack(boxes))
+print("--------------------------------")
+print("Knapsack :")
+print(knapsack(5,[1,2,3],[60,100,120]))
+print("--------------------------------")
+print("Longest Common Substring :")
+print(longest_common_substring("abcdegh","acdeh"))
+print("--------------------------------")
+print("Longest Common Subsequence :")
+print(longest_common_subsequence("abcde","acde"))
+print("--------------------------------")
+print("LCS Memo :")
+print(lcs_memo("abcdegh","acdeh"))
+
+
