@@ -279,6 +279,20 @@ def lcs_memo_helper(str1,str2,i,j,memo):
     else:
         memo[i][j] = max(lcs_memo_helper(str1,str2,i-1,j,memo),lcs_memo_helper(str1,str2,i,j-1,memo))
     return memo[i][j]
+
+def lcp(str1):
+    n = len(str1)
+    return lcp_helper(str1,0,n-1)
+
+def lcp_helper(str1,left,right):
+    if left>right:
+        return 0
+    if left == right:
+        return 1
+    if str1[left] == str1[right]:
+        return 2+lcp_helper(str1,left+1,right-1)
+    return max(lcp_helper(str1,left+1,right),lcp_helper(str1,left,right-1))
+    
     
 print("Tower of Hanoi :")
 tower_of_hanoi(3, "A", "C", "B")
@@ -335,5 +349,8 @@ print("".join(result))
 print("--------------------------------")
 print("LCS Memo :")
 print(lcs_memo("abcdegh","acdeh"))
+print("--------------------------------")
+print("LCP :")
+print(lcp("bbabcbcab"))
 
 
